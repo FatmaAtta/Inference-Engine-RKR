@@ -43,11 +43,13 @@ def split_or(condition):
     return split
 
 def add_to_KB(item):
+    print(f"***Adding {item} to KB***")
     if 'is' in item:
         key, val = item.split('is')
         knowledge_base[key.strip()] = val.strip()
     else:
         knowledge_base[item] = True
+    print(f"***Current KB: {knowledge_base}***")
     return knowledge_base
 
 rules = read_rules("rules.txt")
