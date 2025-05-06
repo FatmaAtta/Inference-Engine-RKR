@@ -55,10 +55,13 @@ knowledge_base = read_facts("facts.txt")
 goal = "citrus_fruit"
 
 def back_chaining(knowledge_base, goal, level) -> bool:
-    indent = "    " * level
-    print(f"{indent}Matching {goal}")
+    indentM = "    " * level
+    indentR = "    " * (level+1)
+    print(f"{indentM}Matching {goal}")
+    i = 1
     for key, val in rules.items():
         if val == goal:
+            print(f"{indentR}R{i}: IF {key} THEN {val}")
             or_split = split_or(key)
             and_split = split_and(key)
             if len(or_split) > 1 and len(and_split) <= 1:
@@ -73,6 +76,10 @@ def back_chaining(knowledge_base, goal, level) -> bool:
                 if found == False:
                     for word in or_split:
                         if back_chaining(knowledge_base, word, level+1):
+
+                            print(f"{indentR}Return to R{i}")
+
+
                             knowledge_base = add_to_KB(goal)
                             return True
             elif len(or_split) <= 1 and len(and_split) > 1:
@@ -82,6 +89,9 @@ def back_chaining(knowledge_base, goal, level) -> bool:
                         key_copy = key_copy.replace(word.split()[0],str(knowledge_base[word.split()[0]]))
                     elif word.split()[0] not in knowledge_base:
                         if back_chaining(knowledge_base, word, level+1):
+
+                            print(f"{indentR}Return to R{i}")
+
                             knowledge_base = add_to_KB(word)
                             key_copy = key_copy.replace(word.split()[0],str(knowledge_base[word.split()[0]]))
                         else:
@@ -96,8 +106,9 @@ def back_chaining(knowledge_base, goal, level) -> bool:
                     return True
                 else:
                     return False
-        else:
-            continue
+        # else:
+        #     continue
+        i += 1
 
 if back_chaining(knowledge_base, goal, 0):
     print("GOAL REACHED :D")
